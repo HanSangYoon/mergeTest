@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>home</title>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var formAjax = $('.form-ajax');
+            formAjax.submit(function() {
+                $('#loading').fadeIn();
+                console.log("Form is not sending");
+            })
+        })
+    </script>
+
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="d-flex justify-content-center h-100">
+            <div class="card">
+                <div class="card-header">
+                    <h3>AML</h3>
+                    <div class="d-flex justify-content-end social_icon">
+                        <span><i class="fab fa-facebook-square"></i></span>
+                        <span><i class="fab fa-google-plus-square"></i></span>
+                        <span><i class="fab fa-twitter-square"></i></span>
+                    </div>
+                </div>
+                <form action="{% url 'aml:crawling' %}" class="form-ajax" method="post" id="loginForm">{% csrf_token %}
+                    {# facebook #}
+                    <div class="card-body facebook">
+                        <div class="input-group a-form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="f_username" id="f_username" class="f_username form-control" placeholder="Facebook ID">
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" name="f_password" id="f_password" class="f_password form-control" placeholder="Facebook PW">
+                        </div>
+                    </div>
+                    {# instagram #}
+                    <div class="card-body instagram">
+                        <div class="input-group a-form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="i_username" id="i_username" class="i_username form-control" placeholder="Instagram ID">
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" name="i_password" id="i_password" class="i_password form-control" placeholder="Instagram PW">
+                        </div>
+                    </div>
+                    {# twitter #}
+                    <div class="card-body twitter">
+                        <div class="input-group a-form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="t_username" id="t_username" class="t_username form-control" placeholder="Twitter ID">
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" name="t_password" id="t_password" class="t_password form-control" placeholder="Twitter PW">
+                        </div>
+                    </div>
+                    {# google #}
+                    <div class="card-body google">
+                        <div class="input-group a-form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="g_username" id="g_username" class="g_username form-control" placeholder="Google ID">
+                        </div>
+                        <div class="input-group ">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" name="g_password" id="g_password" class="g_password form-control" placeholder="Google PW">
+                        </div>
+                    </div>
+
+                    {# submit #}
+                    <div class="form-group">
+                        <input type="submit" value="crawling start" class="btn float-right login_btn" id="login">
+                    </div>
+                </form>
+                <div id="loading">
+                    <img id="loading-image" src="{% static 'img/loading_black.gif' %}" alt="Loading..." />
+                    <span id="loading-text">Getting information..</span>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

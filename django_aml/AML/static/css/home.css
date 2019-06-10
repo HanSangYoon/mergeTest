@@ -1,0 +1,362 @@
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans:100,300,400,600,700');
+
+.container{
+    height: 100%;
+    align-content: center;
+}
+
+.card{
+    height: 620px;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 400px;
+    background-color: rgba(0,0,0,0.5) !important;
+}
+
+.card-header h3{
+    color: white;
+}
+
+.social_icon{
+    position: absolute;
+    right: 20px;
+    top: -45px;
+}
+
+.input-group-prepend span{
+    width: 50px;
+    background-color: #fff5fa;
+    color: black;
+    border:0 !important;
+}
+
+input:focus{
+    outline: 0 0 0 0 !important;
+    box-shadow: 0 0 0 0 !important;
+}
+
+.remember{
+    color: white;
+}
+
+.remember input {
+    width: 20px;
+    height: 20px;
+    margin-left: 15px;
+    margin-right: 5px;
+}
+
+.login_btn{
+    color: black;
+    background-color: #fcfaff;
+    width: auto;
+}
+
+.login_btn:hover{
+    color: #949898;
+    background-color: #182334;
+}
+
+.links{
+    color: white;
+}
+
+.links a{
+    margin-left: 4px;
+}
+
+.a-form-group{
+    margin-bottom: 5px;
+}
+
+.form-group{
+    padding-right: 1.25rem;
+    padding-top: 1rem;
+}
+
+/* 로딩 이미지 */
+#loading {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    display: none;
+    opacity: 0.7;
+    background-color: #000000;
+    z-index: 99;
+    text-align: center;
+}
+
+#loading-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 100;
+}
+
+#loading-text {
+    position: absolute;
+    top: 52%;
+    left: 55%;
+    z-index: 100;
+    color: #d3d2d6;
+}
+.submit_btn{
+    display: none;
+}
+
+/* 페이지 전체 */
+
+body{
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+h3{
+     font-family: 'Josefin Sans', sans-serif;
+}
+
+.box{
+    padding:60px 0;
+    display: none;
+}
+
+.box-part{
+    background:#FFF;
+    border-radius:10px;
+    padding:20px 10px;
+    margin:30px 0;
+}
+
+.box-part:hover{
+    background:#4183D7;
+}
+
+.box-part:hover .fa ,
+.box-part:hover .title ,
+.box-part:hover .text ,
+.box-part:hover a{
+    color:#FFF;
+    -webkit-transition: all 1s ease-out;
+    -moz-transition: all 1s ease-out;
+    -o-transition: all 1s ease-out;
+    transition: all 1s ease-out;
+}
+
+.text{
+    margin:20px 0;
+}
+
+.fa{
+     color:#4183D7;
+}
+
+
+/* 공용 */
+.container_a{
+    width: 100%;
+    max-width: 1900px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.card-background{
+    background: linear-gradient(to top, #eeeeee4d, #eeeeee4d);
+    color: white;
+}
+/* 페이스북 */
+.content_f {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+/* 페이스북 프로필 이미지 */
+.title_f+div > div {
+    display: inline-block;
+}
+
+.p_img {
+    height: 200px;
+}
+
+/* 페이스북 유저 정보 */
+.info_f {
+    width: 100%;
+}
+
+.info_list_f > li {
+    margin-bottom: 10px;
+}
+
+/* 페이스북 유저 정보2 */
+.friends_f > div >  span {
+    font-size: 1.3em;
+    border: solid 2px white;
+}
+
+.friends_list_f{
+    padding-left:0;
+    list-style: none;
+}
+
+.friends_list_f > li {
+    margin-bottom: 10px;
+}
+
+/* 인스타그램 */
+.content_i {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+/* 인스타그램 프로필 이미지 */
+.title_i+div > div {
+    display: inline-block;
+}
+
+/* 인스타그램 유저 정보 */
+.info_i {
+    width: 100%;
+}
+
+.info_list_i > li {
+    margin-bottom: 10px;
+}
+
+/* 인스타그램 유저 정보2 */
+.following_i > div >  span {
+    font-size: 1.3em;
+    border: solid 2px white;
+}
+
+.following_list_i{
+    padding-left:0;
+    list-style: none;
+}
+
+.following_list_i > li {
+    margin-bottom: 10px;
+}
+
+/* 트위터 */
+.content_t {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+/* 트위터 프로필 이미지 */
+.title_t+div > div {
+    display: inline-block;
+}
+
+/* 트위터 유저 정보 */
+.info_t {
+    width: 100%;
+}
+
+.info_list_t > li {
+    margin-bottom: 10px;
+}
+
+/* 트위터 유저 정보2 */
+.following_t > div >  span {
+    font-size: 1.3em;
+    border: solid 2px white;
+}
+
+.following_list_t{
+    padding-left:0;
+    list-style: none;
+}
+
+.following_list_t > li {
+    margin-bottom: 10px;
+}
+
+/* 유튜브 */
+.content_y {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+/* 유튜브 프로필 이미지 */
+.title_y+div > div {
+    display: inline-block;
+}
+
+/* 유튜브 유저 정보 */
+.info_y {
+    width: 100%;
+}
+
+.info_list_y > li {
+    margin-bottom: 10px;
+}
+
+/* 유튜브 유저 정보2 */
+.subscribe_y > div > span {
+    font-size: 1.3em;
+    border: solid 2px white;
+}
+
+.subscribe_list_y{
+    padding-left:0;
+    list-style: none;
+}
+
+.subscribe_list_y > div {
+    margin-bottom: 10px;
+    border-bottom: solid 2px white;
+}
+
+.profile_img_y > img {
+    height: 100px;
+}
+
+/* 지메일 */
+.content_g {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+/* 지메일 유저 정보 */
+.info_g {
+    width: 100%;
+}
+
+.info_list_g > li {
+    margin-bottom: 10px;
+}
+
+/* 지메일 유저 정보2 */
+.mail_list_g > div > span {
+    font-size: 1.3em;
+    border: solid 2px white;
+}
+
+.mail_table {
+    display: none;
+}
+th {
+    text-align: center;
+}
+
+.span {
+    border-bottom: solid 2px white;
+    padding: 5px;
+    display: none;
+}
+
+.re_submit{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+input[text]{
+    width: 10rem;
+}
+input[password]{
+    width: 10rem;
+}

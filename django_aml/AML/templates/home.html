@@ -1,0 +1,760 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>home</title>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="d-flex justify-content-center h-100">
+            <div class="card">
+                <div class="card-header">
+                    <h3>AML</h3>
+                    <div class="d-flex justify-content-end social_icon">
+                        <span><i class="fab fa-facebook-square"></i></span>
+                        <span><i class="fab fa-google-plus-square"></i></span>
+                        <span><i class="fab fa-twitter-square"></i></span>
+                    </div>
+                </div>
+                <form action="{% url 'aml:f_crawling' %}" class="form-ajax" method="post">{% csrf_token %}
+                    {#                     facebook#}
+                    <div class="card-body facebook">
+                        <div class="input-group a-form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="f_username" id="f_username" class="f_username form-control"
+                                   placeholder="Facebook ID">
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" name="f_password" id="f_password" class="f_password form-control"
+                                   autocomplete="false" placeholder="Facebook PW">
+                        </div>
+                    </div>
+                </form>
+                <form action="{% url 'aml:i_crawling' %}" class="form-ajax" method="post">{% csrf_token %}
+                    {#                     instagram#}
+                    <div class="card-body instagram">
+                        <div class="input-group a-form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="i_username" id="i_username" class="i_username form-control"
+                                   placeholder="Instagram ID">
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" name="i_password" id="i_password" class="i_password form-control"
+                                   autocomplete="false" placeholder="Instagram PW">
+                        </div>
+                    </div>
+                </form>
+                <form action="{% url 'aml:t_crawling' %}" class="form-ajax" method="post">{% csrf_token %}
+                    {#                     twitter#}
+                    <div class="card-body twitter">
+                        <div class="input-group a-form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="t_username" id="t_username" class="t_username form-control"
+                                   placeholder="Twitter ID">
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" name="t_password" id="t_password" class="t_password form-control"
+                                   autocomplete="false" placeholder="Twitter PW">
+                        </div>
+                    </div>
+                </form>
+                <form action="{% url 'aml:y_crawling' %}" class="form-ajax" method="post">{% csrf_token %}
+                    {#                     google#}
+                    <div class="card-body google">
+                        <div class="input-group a-form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="g_username" id="g_username" class="g_username form-control"
+                                   placeholder="Google ID">
+                        </div>
+                        <div class="input-group ">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" name="g_password" id="g_password" class="g_password form-control"
+                                   autocomplete="false" placeholder="Google PW">
+                        </div>
+                    </div>
+                </form>
+                {#                 submit#}
+                <div class="form-group">
+                    <input type="submit" value="crawling start" class="btn float-right login_btn" id="login">
+                </div>
+                <div id="loading">
+                    <img id="loading-image" src="{% static 'img/loading_black.gif' %}" alt="Loading..."/>
+                    <span id="loading-text">Getting information..</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'crawling.html' %}
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.login_btn').click(function (e) {
+                e.preventDefault();
+
+                $('.container').fadeOut();
+                $('.box').fadeIn();
+
+                g_username = $('.g_username').val();
+                g_password = $('.g_password').val();
+
+                // 페이스북
+                $.ajax({
+                    url: "{% url 'aml:f_crawling' %}",
+                    method: 'post',
+                    data: {
+                        'f_username': $('.f_username').val(),
+                        'f_password': $('.f_password').val(),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        console.log(Object.keys(response).length);
+                        if (Object.keys(response).length > 1) {
+                            info = response.facebook_info;
+                            friends = response.facebook_friends;
+                            img = response.facebook_img;
+
+                            $('.profile_img_f').append("<img src='" + img + "' class='p_img'>");
+                            $('.friends_f > .span').show();
+                            for (var key in info)
+                                $('.info_list_f').append('<li>' + key + ' : ' + info[key] + '</li>')
+                            for (var i = 0; i < 10; i++)
+                                $('.friends_list_f').append('<li>' + friends[i]['name'] + ' : ' + friends[i]['page_id'] + '</li>')
+                        } else {
+                            $('.info_list_f').append('<li>' + response.facebook_info + '</li>');
+                            $('.facebook_box').append(
+                                '<div class="re_f_form">\n' +
+                                '               <form class="form-ajax">{% csrf_token %}\n' +
+                                '                    <div class="card-body facebook">\n' +
+                                '                        <div class="input-group a-form-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-user"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="text" name="f_username" id="f_username" class="f_username form-control"\n' +
+                                '                                   placeholder="Facebook ID">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="input-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-key"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="password" name="f_password" id="f_password" class="f_password form-control"\n' +
+                                '                                   autocomplete="false" placeholder="Facebook PW">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="re_submit"><input type="button" class="btn float-right f_btn" value="login"></div>\n' +
+                                '                    </div>\n' +
+                                '                </form>\n' +
+                                '</div>'
+                            )
+                        }
+
+                    },
+                    error: function (request, status, error) {
+                        console.log('페이스북 실패')
+                    }
+                });
+
+                // 인스타그램
+                $.ajax({
+                    url: "{% url 'aml:i_crawling' %}",
+                    method: 'post',
+                    data: {
+                        'i_username': $('.i_username').val(),
+                        'i_password': $('.i_password').val(),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        console.log(Object.keys(response).length);
+
+                        if (Object.keys(response).length > 1) {
+                            info = response.instagram_info;
+                            following = response.instagram_following;
+                            img = response.instagram_img;
+
+                            $('.profile_img_i').append("<img src='" + img + "' class='p_img'>");
+                            $('.following_i > .span').show();
+                            for (var key in info)
+                                $('.info_list_i').append('<li>' + key + ' : ' + info[key] + '</li>')
+                            for (var i = 0; i < 10; i++)
+                                $('.following_list_i').append('<li>' + following[i]['name'] + ' : ' + following[i]['id'] + '</li>')
+                        } else {
+                            $('.info_list_i').append('<li>' + response.instagram_info + '</li>');
+                            $('.instagram_box').append(
+                                '<div class="re_i_form">\n' +
+                                '               <form class="form-ajax">{% csrf_token %}\n' +
+                                '                    <div class="card-body facebook">\n' +
+                                '                        <div class="input-group a-form-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-user"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="text" name="i_username" id="i_username" class="i_username form-control"\n' +
+                                '                                   placeholder="Instagram ID">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="input-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-key"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="password" name="i_password" id="i_password" class="i_password form-control"\n' +
+                                '                                   autocomplete="false" placeholder="Instagram PW">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="re_submit"><input type="button" class="btn float-right i_btn" value="login"></div>\n' +
+                                '                    </div>\n' +
+                                '                </form>\n' +
+                                '</div>'
+                            )
+                        }
+                    },
+                    error: function (request, status, error) {
+                        console.log('인스타 실패')
+                    }
+                });
+
+                // 트위터
+                $.ajax({
+                    url: "{% url 'aml:t_crawling' %}",
+                    method: 'post',
+                    data: {
+                        't_username': $('.t_username').val(),
+                        't_password': $('.t_password').val(),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        console.log(Object.keys(response).length);
+
+                        if (Object.keys(response).length > 1) {
+                            info = response.twitter_info;
+                            following = response.twitter_following;
+                            img = response.twitter_img;
+
+                            $('.profile_img_t').append("<img src='" + img + "' class='p_img'>");
+                            $('.following_t > .span').show();
+                            for (var key in info)
+                                $('.info_list_t').append('<li>' + key + ' : ' + info[key] + '</li>')
+                            for (var i = 0; i < 10; i++)
+                                $('.following_list_t').append('<li>' + following[i]['name'] + ' : ' + following[i]['id'] + '</li>')
+                        } else {
+                            $('.info_list_t').append('<li>' + response.twitter_info + '</li>');
+                            $('.twitter_box').append(
+                                '<div class="re_t_form">\n' +
+                                '               <form class="form-ajax">{% csrf_token %}\n' +
+                                '                    <div class="card-body twitter">\n' +
+                                '                        <div class="input-group a-form-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-user"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="text" name="t_username" id="t_username" class="t_username form-control"\n' +
+                                '                                   placeholder="Twitter ID">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="input-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-key"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="password" name="t_password" id="t_password" class="t_password form-control"\n' +
+                                '                                   autocomplete="false" placeholder="Twitter PW">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="re_submit"><input type="button" class="btn float-right t_btn" value="login"></div>\n' +
+                                '                    </div>\n' +
+                                '                </form>\n' +
+                                '</div>'
+                            )
+                        }
+                    },
+                    error: function (request, status, error) {
+                        console.log('트위터 실패')
+                    }
+                });
+
+                // 유튜브
+                $.ajax({
+                    url: "{% url 'aml:y_crawling' %}",
+                    method: 'post',
+                    data: {
+                        'g_username': g_username,
+                        'g_password': g_password,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        console.log(Object.keys(response).length);
+
+                        if (Object.keys(response).length > 1) {
+                            info = response.youtube_info;
+                            subscribe = response.youtube_subscribe;
+                            img = response.youtube_img;
+
+                            $('.profile_img_y').append("<img src='" + img + "' class='p_img'>");
+                            $('.subscribe_y > .span').show();
+                            for (var key in info)
+                                $('.info_list_y').append('<li>' + key + ' : ' + info[key] + '</li>')
+                            for (var i = 0; i < 5; i++)
+                                $('.subscribe_list_y').append(
+                                    '<div class="channel">'+
+                                        '<div class="channel_info">'+
+                                            '<h6>' + subscribe[i]['channel_name'] +'</h6>'+
+                                            '<span> 구독자 : ' + subscribe[i]['channel_sub'] +'명 /</span>'+
+                                            '<span> 동영상 : ' + subscribe[i]['channel_video'] +'개</span>'+
+                                        '</div>'+
+                                        '<div class="channel_intro">'+subscribe[i]['channel_info']+'</div>'+
+                                    '</div>'
+                                );
+                        } else {
+                            $('.info_list_y').append('<li>' + response.youtube_info + '</li>');
+                            $('.youtube_box').append(
+                                '<div class="re_y_form">\n' +
+                                '               <form class="form-ajax">{% csrf_token %}\n' +
+                                '                    <div class="card-body youtube">\n' +
+                                '                        <div class="input-group a-form-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-user"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="text" name="y_username" id="y_username" class="y_username form-control"\n' +
+                                '                                   placeholder="Google ID">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="input-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-key"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="password" name="y_password" id="y_password" class="y_password form-control"\n' +
+                                '                                   autocomplete="false" placeholder="Google PW">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="re_submit"><input type="button" class="btn float-right y_btn" value="login"></div>\n' +
+                                '                    </div>\n' +
+                                '                </form>\n' +
+                                '</div>'
+                            )
+                        }
+                    },
+                    error: function (request, status, error) {
+                        console.log('유튜브 실패')
+                    }
+                 });
+
+                // gmail   sdfsdfsdf
+                $.ajax({
+                    url: "{% url 'aml:g_crawling' %}",
+                    method: 'post',
+                    data: {
+                        'g_username': g_username,
+                        'g_password': g_password,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        console.log(Object.keys(response).length);
+
+                        if (Object.keys(response).length > 1) {
+                            info = response.gmail_info;
+                            glist = response.gmail_list;
+
+                            $('.mail_list_g > .span').show();
+                            $('.mail_table').show();
+                            for (var key in info)
+                                $('.info_list_g').append('<li>' + key + ' : ' + info[key] + '</li>')
+                            for (var i = 0; i < 10; i++)
+                                $('tbody').append(
+                                    '<tr>'+
+                                        '<td> '+ glist[i]['sender'] +'</td>'+
+                                        '<td> '+ glist[i]['mail_sender_email'] +'</td>'+
+                                        '<td> '+ glist[i]['mail_title'] +'</td>'+
+                                        '<td> '+ glist[i]['mail_contents'] +'</td>'+
+                                        '<td> '+ glist[i]['mail_date'] +'</td>'+
+                                    '</tr>'
+                                );
+                        } else {
+                            $('.info_list_g').append('<li>' + response.gmail_info + '</li>');
+                            $('.gmail_box').append(
+                                '<div class="re_g_form">\n' +
+                                '               <form class="form-ajax">{% csrf_token %}\n' +
+                                '                    <div class="card-body gmail">\n' +
+                                '                        <div class="input-group a-form-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-user"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="text" name="g_username" id="g_username" class="g_username form-control"\n' +
+                                '                                   placeholder="Google ID">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="input-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-key"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="password" name="g_password" id="g_password" class="g_password form-control"\n' +
+                                '                                   autocomplete="false" placeholder="Google PW">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="re_submit"><input type="button" class="btn float-right g_btn" value="login"></div>\n' +
+                                '                    </div>\n' +
+                                '                </form>\n' +
+                                '</div>'
+                            )
+                        }
+                    },
+                    error: function (request, status, error) {
+                        console.log('gmail 실패')
+                    }
+                 });
+                $('.container').remove();
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // re 페이스 북
+            $(document).on("click", ".f_btn", function (e) {
+                e.preventDefault();
+                $('.info_list_f > li').fadeOut();
+                $('.re_f_form').fadeOut();
+                $.ajax({
+                    url: "{% url 'aml:f_crawling' %}",
+                    method: 'post',
+                    data: {
+                        'f_username': $('.f_username').val(),
+                        'f_password': $('.f_password').val(),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        console.log(Object.keys(response).length);
+                        if (Object.keys(response).length > 1) {
+                            info = response.facebook_info;
+                            friends = response.facebook_friends;
+                            img = response.facebook_img;
+
+                            $('.profile_img_f').append("<img src='" + img + "' class='p_img'>");
+                            $('.friends_f > .span').show();
+                            for (var key in info)
+                                $('.info_list_f').append('<li>' + key + ' : ' + info[key] + '</li>')
+                            for (var i = 0; i < 10; i++)
+                                $('.friends_list_f').append('<li>' + friends[i]['name'] + ' : ' + friends[i]['page_id'] + '</li>')
+                        } else {
+                            $('.re_f_form').remove();
+                            $('.info_list_f > li').remove();
+                            $('.info_list_f').append('<li>' + response.facebook_info + '</li>');
+                            $('.facebook_box').append(
+                                '<div class="re_f_form">\n' +
+                                '               <form class="form-ajax" >{% csrf_token %}\n' +
+                                '                    <div class="card-body facebook">\n' +
+                                '                        <div class="input-group a-form-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-user"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="text" name="f_username" id="f_username" class="f_username form-control"\n' +
+                                '                                   placeholder="Facebook ID">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="input-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-key"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="password" name="f_password" id="f_password" class="f_password form-control"\n' +
+                                '                                   autocomplete="false" placeholder="Facebook PW">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="re_submit"><input type="submit" class="btn float-right f_btn" value="login"></div>\n' +
+                                '                    </div>\n' +
+                                '                </form>\n' +
+                                '</div>'
+                            )
+                        }
+
+                    },
+                    error: function (request, status, error) {
+                        console.log('페이스북 실패')
+                    }
+                });
+            });
+
+            // re 인스타그램
+            $(document).on("click", ".i_btn", function (e) {
+                e.preventDefault();
+                $('.info_list_i > li').fadeOut();
+                $('.re_i_form').fadeOut();
+                $.ajax({
+                    url: "{% url 'aml:i_crawling' %}",
+                    method: 'post',
+                    data: {
+                        'i_username': $('.i_username').val(),
+                        'i_password': $('.i_password').val(),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        console.log(Object.keys(response).length);
+                         if (Object.keys(response).length > 1) {
+                            info = response.instagram_info;
+                            following = response.instagram_following;
+                            img = response.instagram_img;
+
+                            $('.profile_img_i').append("<img src='" + img + "' class='p_img'>");
+                            $('.following_i > .span').show();
+                            for (var key in info)
+                                $('.info_list_i').append('<li>' + key + ' : ' + info[key] + '</li>')
+                            for (var i = 0; i < 10; i++)
+                                $('.following_list_i').append('<li>' + following[i]['name'] + ' : ' + following[i]['id'] + '</li>')
+                        } else {
+                             $('.re_i_form').remove();
+                             $('.info_list_i > li').remove();
+                            $('.info_list_i').append('<li>' + response.instagram_info + '</li>');
+                            $('.instagram_box').append(
+                                '<div class="re_i_form">\n' +
+                                '               <form class="form-ajax">{% csrf_token %}\n' +
+                                '                    <div class="card-body facebook">\n' +
+                                '                        <div class="input-group a-form-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-user"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="text" name="i_username" id="i_username" class="i_username form-control"\n' +
+                                '                                   placeholder="Instagram ID">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="input-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-key"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="password" name="i_password" id="i_password" class="i_password form-control"\n' +
+                                '                                   autocomplete="false" placeholder="Instagram PW">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="re_submit"><input type="button" class="btn float-right i_btn" value="login"></div>\n' +
+                                '                    </div>\n' +
+                                '                </form>\n' +
+                                '</div>'
+                            )
+                        }
+
+                    },
+                    error: function (request, status, error) {
+                        console.log('인스타그램 실패')
+                    }
+                });
+            });
+
+            // re 트위터
+            $(document).on("click", ".t_btn", function (e) {
+                e.preventDefault();
+                $('.info_list_t > li').fadeOut();
+                $('.re_t_form').fadeOut();
+                $.ajax({
+                    url: "{% url 'aml:t_crawling' %}",
+                    method: 'post',
+                    data: {
+                        't_username': $('.t_username').val(),
+                        't_password': $('.t_password').val(),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        console.log(Object.keys(response).length);
+                        if (Object.keys(response).length > 1) {
+                            info = response.twitter_info;
+                            following = response.twitter_following;
+                            img = response.twitter_img;
+
+                            $('.profile_img_t').append("<img src='" + img + "' class='p_img'>");
+                            $('.following_t > .span').show();
+                            for (var key in info)
+                                $('.info_list_t').append('<li>' + key + ' : ' + info[key] + '</li>')
+                            for (var i = 0; i < 10; i++)
+                                $('.following_list_t').append('<li>' + following[i]['name'] + ' : ' + following[i]['id'] + '</li>')
+                        } else {
+                            $('.re_t_form').remove();
+                            $('.info_list_t > li').remove();
+                            $('.info_list_t').append('<li>' + response.twitter_info + '</li>');
+                            $('.twitter_box').append(
+                                '<div class="re_t_form">\n' +
+                                '               <form class="form-ajax">{% csrf_token %}\n' +
+                                '                    <div class="card-body twitter">\n' +
+                                '                        <div class="input-group a-form-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-user"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="text" name="t_username" id="t_username" class="t_username form-control"\n' +
+                                '                                   placeholder="Twitter ID">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="input-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-key"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="password" name="t_password" id="t_password" class="t_password form-control"\n' +
+                                '                                   autocomplete="false" placeholder="Twitter PW">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="re_submit"><input type="button" class="btn float-right t_btn" value="login"></div>\n' +
+                                '                    </div>\n' +
+                                '                </form>\n' +
+                                '</div>'
+                            )
+                        }
+
+                    },
+                    error: function (request, status, error) {
+                        console.log('트위터 실패')
+                    }
+                });
+            });
+
+            // re 유튜브
+            $(document).on("click", ".y_btn", function (e) {
+                e.preventDefault();
+                $('.info_list_y > li').fadeOut();
+                $('.re_y_form').fadeOut();
+                $.ajax({
+                    url: "{% url 'aml:y_crawling' %}",
+                    method: 'post',
+                    data: {
+                        'g_username': $('.y_username').val(),
+                        'g_password': $('.y_password').val(),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        console.log(Object.keys(response).length);
+
+                        if (Object.keys(response).length > 1) {
+                            info = response.youtube_info;
+                            subscribe = response.youtube_subscribe;
+                            img = response.youtube_img;
+
+                            $('.profile_img_y').append("<img src='" + img + "' class='p_img'>");
+                            $('.subscribe_y > .span').show();
+                            for (var key in info)
+                                $('.info_list_y').append('<li>' + key + ' : ' + info[key] + '</li>')
+                            for (var i = 0; i < 5; i++)
+                                $('.subscribe_list_y').append(
+                                    '<div class="channel">'+
+                                        '<div class="channel_info">'+
+                                            '<h6>' + subscribe[i]['channel_name'] +'</h6>'+
+                                            '<span> 구독자 : ' + subscribe[i]['channel_sub'] +'명 /</span>'+
+                                            '<span> 동영상 : ' + subscribe[i]['channel_video'] +'개</span>'+
+                                        '</div>'+
+                                        '<div class="channel_intro">'+subscribe[i]['channel_info']+'</div>'+
+                                    '</div>'
+                                );
+                        } else {
+                            $('.info_list_y > li').remove();
+                            $('.re_y_form').remove();
+                            $('.info_list_y').append('<li>' + response.youtube_info + '</li>');
+                            $('.youtube_box').append(
+                                '<div class="re_y_form">\n' +
+                                '               <form class="form-ajax">{% csrf_token %}\n' +
+                                '                    <div class="card-body youtube">\n' +
+                                '                        <div class="input-group a-form-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-user"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="text" name="y_username" id="y_username" class="y_username form-control"\n' +
+                                '                                   placeholder="Google ID">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="input-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-key"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="password" name="y_password" id="y_password" class="y_password form-control"\n' +
+                                '                                   autocomplete="false" placeholder="Google PW">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="re_submit"><input type="button" class="btn float-right y_btn" value="login"></div>\n' +
+                                '                    </div>\n' +
+                                '                </form>\n' +
+                                '</div>'
+                            )
+                        }
+                    },
+                    error: function (request, status, error) {
+                        console.log('유튜브 실패')
+                    }
+                 });
+            });
+
+            // re 지메일
+            $(document).on("click", ".g_btn", function (e) {
+                e.preventDefault();
+                $('.info_list_g > li').fadeOut();
+                $('.re_g_form').fadeOut();
+                $.ajax({
+                    url: "{% url 'aml:g_crawling' %}",
+                    method: 'post',
+                    data: {
+                        'g_username': g_username,
+                        'g_password': g_password,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        console.log(Object.keys(response).length);
+
+                        if (Object.keys(response).length > 1) {
+                            info = response.gmail_info;
+                            glist = response.gmail_list;
+
+                            $('.mail_list_g > .span').show();
+                            $('.mail_table').show();
+                            for (var key in info)
+                                $('.info_list_g').append('<li>' + key + ' : ' + info[key] + '</li>')
+                            for (var i = 0; i < 10; i++)
+                                $('tbody').append(
+                                    '<tr>'+
+                                        '<td> '+ glist[i]['sender'] +'</td>'+
+                                        '<td> '+ glist[i]['mail_sender_email'] +'</td>'+
+                                        '<td> '+ glist[i]['mail_title'] +'</td>'+
+                                        '<td> '+ glist[i]['mail_contents'] +'</td>'+
+                                        '<td> '+ glist[i]['mail_date'] +'</td>'+
+                                    '</tr>'
+                                );
+                        } else {
+                            $('.re_g_form').remove();
+                            $('.info_list_g > li').remove();
+                            $('.info_list_g').append('<li>' + response.gmail_info + '</li>');
+                            $('.gmail_box').append(
+                                '<div class="re_g_form">\n' +
+                                '               <form class="form-ajax">{% csrf_token %}\n' +
+                                '                    <div class="card-body gmail">\n' +
+                                '                        <div class="input-group a-form-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-user"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="text" name="g_username" id="g_username" class="g_username form-control"\n' +
+                                '                                   placeholder="Google ID">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="input-group">\n' +
+                                '                            <div class="input-group-prepend">\n' +
+                                '                                <span class="input-group-text"><i class="fas fa-key"></i></span>\n' +
+                                '                            </div>\n' +
+                                '                            <input type="password" name="g_password" id="g_password" class="g_password form-control"\n' +
+                                '                                   autocomplete="false" placeholder="Google PW">\n' +
+                                '                        </div>\n' +
+                                '                        <div class="re_submit"><input type="button" class="btn float-right g_btn" value="login"></div>\n' +
+                                '                    </div>\n' +
+                                '                </form>\n' +
+                                '</div>'
+                            )
+                        }
+                    },
+                    error: function (request, status, error) {
+                        console.log('gmail 실패')
+                    }
+                 });
+            });
+        });
+    </script>
+{% endblock %}

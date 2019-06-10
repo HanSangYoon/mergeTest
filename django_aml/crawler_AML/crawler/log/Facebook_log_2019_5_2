@@ -1,0 +1,5 @@
+[ERROR|facebookCrawlerBot_AML.py:300] 2019-05-02 15:23:01,966 > [ Error ] MariaDB About information Insertion => invalid literal for int() with base 10: ''
+[ERROR|facebookCrawlerBot_AML.py:300] 2019-05-02 15:23:17,336 > [ Error ] MariaDB About information Insertion => invalid literal for int() with base 10: ''
+[ERROR|facebookCrawlerBot_AML.py:300] 2019-05-02 15:23:48,991 > [ Error ] MariaDB About information Insertion => invalid literal for int() with base 10: ''
+[ERROR|facebookCrawlerBot_AML.py:300] 2019-05-02 15:24:52,734 > [ Error ] MariaDB About information Insertion => invalid literal for int() with base 10: ''
+[ERROR|facebookCrawlerBot_AML.py:330] 2019-05-02 16:53:06,738 > [ Error ] MariaDB About information Insertion => 'Youtube'
